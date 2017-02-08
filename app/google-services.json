@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "230824078738",
+    "firebase_url": "https://personalproject-5de6d.firebaseio.com",
+    "project_id": "personalproject-5de6d",
+    "storage_bucket": "personalproject-5de6d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:230824078738:android:af182541b48f85cf",
+        "android_client_info": {
+          "package_name": "com.gunjun.android.personalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "230824078738-llo2nao1gh6ha8pipllo7eu8kgai5pn1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKm4f01DnUObrQplfhjKB9oU2S1VnyFMY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "230824078738-llo2nao1gh6ha8pipllo7eu8kgai5pn1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

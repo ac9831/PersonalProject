@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">PersonalProject</string>
+
+    <!-- login -->
+    <string name="title">Personal Care</string>
+    <string name="intro">환영합니다!</string>
+    <string name="intro_1">로그인 후 Personal Care를 시작하세요!</string>
+    <string name="intro_2">나를 위한 투자!</string>
+    <string name="intro_3">나를 위한 정보를 만나보세요!</string>
+
+    <!-- facebook -->
+    <string name="facebook_app_id">218522611945703</string>
 </resources>
