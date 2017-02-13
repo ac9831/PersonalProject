@@ -13,10 +13,10 @@ public class Profile extends RealmObject {
 
     @PrimaryKey
     private int id;
+    private String name;
     private float weight;
     private float height;
     private int age;
-    private float goalWeight;
     private int goalStep;
     private RealmList<Step> step;
 
@@ -26,6 +26,14 @@ public class Profile extends RealmObject {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public float getWeight() {
@@ -50,14 +58,6 @@ public class Profile extends RealmObject {
 
     public void setAge(int age) {
         this.age = age;
-    }
-
-    public float getGoalWeight() {
-        return goalWeight;
-    }
-
-    public void setGoalWeight(float goalWeight) {
-        this.goalWeight = goalWeight;
     }
 
     public int getGoalStep() {

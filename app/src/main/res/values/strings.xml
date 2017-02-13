@@ -8,6 +8,15 @@
     <string name="intro_2">나를 위한 투자!</string>
     <string name="intro_3">나를 위한 정보를 만나보세요!</string>
 
+    <!-- profile -->
+    <string name="name">이름을 입력하세요</string>
+    <string name="age">나이를 입력하세요</string>
+    <string name="height">키를 입력하세요</string>
+    <string name="weight">몸무게를 입력하세요</string>
+    <string name="goalStep">목표 걸음 수를 입력하세요</string>
+    <string name="picture">사진을 선택하세요</string>
+    <string name="finish">완료</string>
+
     <!-- facebook -->
     <string name="facebook_app_id">218522611945703</string>
 </resources>
