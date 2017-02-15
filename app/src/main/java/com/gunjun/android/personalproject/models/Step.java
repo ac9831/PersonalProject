@@ -1,7 +1,5 @@
 package com.gunjun.android.personalproject.models;
 
-import java.util.Date;
-
 import io.realm.RealmObject;
 
 /**
@@ -11,7 +9,7 @@ import io.realm.RealmObject;
 public class Step extends RealmObject {
 
     private int step;
-    private Date today;
+    private String today;
 
     public int getStep() {
         return step;
@@ -21,11 +19,11 @@ public class Step extends RealmObject {
         this.step = step;
     }
 
-    public Date getToday() {
+    public String getToday() {
         return today;
     }
 
-    public void setToday(Date today) {
+    public void setToday(String today) {
         this.today = today;
     }
 }

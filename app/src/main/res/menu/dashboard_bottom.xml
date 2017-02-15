@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_feed"
+        android:icon="@drawable/note"
+        android:title="@string/feed" />
+    <item
+        android:id="@+id/action_rss"
+        android:icon="@drawable/rss"
+        android:title="@string/rss" />
+    <item
+        android:id="@+id/action_video"
+        android:icon="@drawable/video"
+        android:title="@string/video" />
+    <item
+        android:id="@+id/action_sns"
+        android:icon="@drawable/sns"
+        android:title="@string/sns" />
+</menu>

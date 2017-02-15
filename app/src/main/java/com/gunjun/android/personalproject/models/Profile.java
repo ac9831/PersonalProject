@@ -1,6 +1,5 @@
 package com.gunjun.android.personalproject.models;
 
-import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -18,6 +17,7 @@ public class Profile extends RealmObject {
     private float height;
     private int age;
     private int goalStep;
+    private String imgPath;
     private RealmList<Step> step;
 
     public int getId() {
@@ -66,6 +66,14 @@ public class Profile extends RealmObject {
 
     public void setGoalStep(int goalStep) {
         this.goalStep = goalStep;
+    }
+
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
     }
 
     public RealmList<Step> getStep() {
