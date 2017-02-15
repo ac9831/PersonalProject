@@ -3,7 +3,11 @@ apply plugin: 'realm-android'
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def sdkDir = properties.getProperty('sdk.dir')
+def CLIENT_ID = properties.getProperty('CLIENT_ID')
+def CLIENT_SECRET = properties.getProperty('CLIENT_SECRET')
+def CALLBACK_URL = properties.getProperty('CALLBACK_URL')
+def MyOpenWeatherMapApiKey = properties.getProperty('MyOpenWeatherMapApiKey')
+
 
 android {
     compileSdkVersion 25
@@ -23,7 +27,9 @@ android {
     }
     buildTypes.each {
         it.buildConfigField 'String', 'OPEN_WEATHER_MAP_API_KEY', MyOpenWeatherMapApiKey
-        it.buildConfigField 'String', 'SDK', sdkDir
+        it.buildConfigField 'String', 'CLIENT_ID', CLIENT_ID
+        it.buildConfigField 'String', 'CLIENT_SECRET', CLIENT_SECRET
+        it.buildConfigField 'String', 'CALLBACK_URL', CALLBACK_URL
     }
 }
 
