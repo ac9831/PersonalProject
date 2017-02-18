@@ -60,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity  {
     @BindView(R.id.profile_image)
     protected CircleImageView circleImageView;
 
-    @BindView(R.id.my_toolbar)
+    @BindView(R.id.profile_toolbar)
     protected Toolbar toolbar;
 
     @Override
@@ -76,6 +76,7 @@ public class ProfileActivity extends AppCompatActivity  {
         getSupportActionBar().setTitle("Profile");
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

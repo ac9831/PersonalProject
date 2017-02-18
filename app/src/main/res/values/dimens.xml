@@ -15,4 +15,10 @@
     <dimen name="card_text">10dp</dimen>
     <dimen name="card_num_height">120dp</dimen>
     <dimen name="step_text">40sp</dimen>
+
+    <!-- Setting -->
+    <dimen name="setting_title">20sp</dimen>
+    <dimen name="setting_connect">17sp</dimen>
+    <dimen name="space">30dp</dimen>
+    <dimen name="check_box">30dp</dimen>
 </resources>

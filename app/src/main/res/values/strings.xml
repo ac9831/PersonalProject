@@ -16,13 +16,23 @@
     <string name="goalStep">목표 걸음 수를 입력하세요</string>
     <string name="picture">사진을 선택하세요</string>
     <string name="finish">완료</string>
-    
+
     <!-- Dashboard -->
     <string name="feed">개인 피드</string>
     <string name="rss">rss</string>
     <string name="video">영상</string>
     <string name="sns">SNS</string>
-    
+    <string name="setting">Setting</string>
+
     <!-- facebook -->
     <string name="facebook_app_id">218522611945703</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Setting -->
+    <string name="facebook">페이스 북</string>
+    <string name="google">구글</string>
+    <string name="instagram">인스타그램</string>
+    <string name="connect">연결 됨</string>
+    <string name="not_connect">연결 되지 않음</string>
+
 </resources>

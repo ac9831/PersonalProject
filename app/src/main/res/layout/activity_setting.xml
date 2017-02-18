@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_setting"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/setting_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="0dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        tools:targetApi="lollipop" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/google_plus_icon"
+            android:layout_weight="2"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="15">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/setting_title"
+                android:id="@+id/google_text"
+                android:text="@string/google" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/google_status"
+                android:textSize="@dimen/setting_connect"
+                android:text="@string/not_connect"/>
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/google_check"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/check_box"
+            android:layout_height="@dimen/check_box"
+            android:background="@drawable/custom_check_box"
+            android:button="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space"
+        android:background="@color/settingBackColor">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/facebook_icon"
+            android:layout_weight="2"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="15">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/facebook_text"
+                android:textSize="@dimen/setting_title"
+                android:text="@string/facebook" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/facebook_status"
+                android:textSize="@dimen/setting_connect"
+                android:text="@string/not_connect"/>
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/facebook_check"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/check_box"
+            android:layout_height="@dimen/check_box"
+            android:background="@drawable/custom_check_box"
+            android:button="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space"
+        android:background="@color/settingBackColor">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/instagram_icon"
+            android:layout_weight="2"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="15">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/setting_title"
+                android:id="@+id/instagram_text"
+                android:text="@string/instagram" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/instagram_status"
+                android:textSize="@dimen/setting_connect"
+                android:text="@string/not_connect"/>
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/instagram_check"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/check_box"
+            android:layout_height="@dimen/check_box"
+            android:background="@drawable/custom_check_box"
+            android:scaleType="fitCenter"
+            android:button="@null" />
+    </LinearLayout>
+
+
+</LinearLayout>

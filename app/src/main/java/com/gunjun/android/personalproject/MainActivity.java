@@ -14,10 +14,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +37,7 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import com.gunjun.android.personalproject.Rss.RssReader;
 import com.gunjun.android.personalproject.api.InstagramApp;
+import com.gunjun.android.personalproject.api.InstagramMediaFile;
 import com.gunjun.android.personalproject.behavior.BottomNavigationViewHelper;
 import com.gunjun.android.personalproject.models.Profile;
 import com.gunjun.android.personalproject.models.RssFeed;
@@ -54,7 +55,6 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -73,29 +73,25 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
-    private GoogleAccountCredential credential;
-    private Realm realm;
-    private DateFormat format;
-    private AsyncTask<Void, Void, Void> mTask;
-    private InstagramApp mApp;
-    private Button btnConnect, btnViewInfo, btnGetAllImages;
-    private LinearLayout llAfterLoginView;
-    private HashMap<String, String> userInfoHashmap = new HashMap<String, String>();
-
-    BuildConfig.OP
-
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             if (msg.what == InstagramApp.WHAT_FINALIZE) {
-                userInfoHashmap = mApp.getUserInfo();
-            } else if (msg.what == InstagramApp.WHAT_FINALIZE) {
+
+            } else if (msg.what == InstagramApp.WHAT_ERROR) {
                 Toast.makeText(MainActivity.this, "Check your network.",
                         Toast.LENGTH_SHORT).show();
             }
             return false;
         }
     });
+
+    private GoogleAccountCredential credential;
+    private Realm realm;
+    private DateFormat format;
+    private AsyncTask<Void, Void, Void> mTask;
+    private InstagramMediaFile instagramMediaFile;
+
 
     @BindView(R.id.bottom_navigation)
     protected BottomNavigationView bottomNavigationView;
@@ -121,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @BindView(R.id.calendar_list)
     protected TextView calendarList;
 
+    @BindView(R.id.main_toolbar)
+    protected Toolbar toolbar;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -129,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         realm = Realm.getDefaultInstance();
+        instagramMediaFile = new InstagramMediaFile();
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
         bottomNavigationView.findViewById(floatingActionButton.getId());
         List<Profile> query = realm.where(Profile.class).findAll();
@@ -142,35 +141,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
         }
 
-        Date date = new Date();
-        format = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Personal");
 
-        mApp = new InstagramApp(this, ApplicationData.CLIENT_ID,
-                ApplicationData.CLIENT_SECRET, ApplicationData.CALLBACK_URL);
-        mApp.setListener(new InstagramApp.OAuthAuthenticationListener() {
-
-            @Override
-            public void onSuccess() {
-// tvSummary.setText("Connected as " + mApp.getUserName());
-                btnConnect.setText("Disconnect");
-                llAfterLoginView.setVisibility(View.VISIBLE);
-// userInfoHashmap = mApp.
-                mApp.fetchUserName(handler);
-            }
-
-            @Override
-            public void onFail(String error) {
-                Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        Step step = realm.where(Step.class).equalTo("today",format.format(date)).findFirst();
-        if (step == null) {
-            stepNumber.setText("0");
-        } else {
-            stepNumber.setText(Integer.toString(step.getStep()));
-        }
+        stepSetting();
 
         try {
             rssCall();
@@ -187,6 +161,18 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         getResultsFromApi();
         Intent service = new Intent(this, ShakeService.class);
         startService(service);
+    }
+
+    private void stepSetting() {
+        Date date = new Date();
+        format = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        Step step = realm.where(Step.class).equalTo("today",format.format(date)).findFirst();
+        if (step == null) {
+            stepNumber.setText("0");
+        } else {
+            stepNumber.setText(Integer.toString(step.getStep()));
+        }
+
     }
 
     @Override
@@ -440,10 +426,23 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
             return eventStrings;
         }
-
-
-
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_setting) {
+            startActivity(new Intent(MainActivity.this, SettingActivity.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
 }

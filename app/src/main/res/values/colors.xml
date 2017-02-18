@@ -7,4 +7,5 @@
     <color name="black">#88000000</color>
 
     <color name="bottomBackground">#F5F5F5</color>
+    <color name="settingBackColor">#555555</color>
 </resources>
