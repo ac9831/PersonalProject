@@ -17,6 +17,9 @@ public class InstagramSession {
     private static final String API_ID = "id";
     private static final String API_NAME = "name";
     private static final String API_ACCESS_TOKEN = "access_token";
+    private static final String API_FOLLOW = "follows";
+    private static final String API_FOLLOWER = "followed_by";
+    private static final String API_MEDIA = "media";
 
     public InstagramSession(Context context) {
         sharedPref = context.getSharedPreferences(SHARED, Context.MODE_PRIVATE);
@@ -37,6 +40,12 @@ public class InstagramSession {
         editor.commit();
     }
 
+    public void setInstagramInfo(String media, String follow, String follower) {
+        editor.putString(API_MEDIA, media);
+        editor.putString(API_FOLLOW, follow);
+        editor.putString(API_FOLLOWER, follower);
+        editor.commit();
+    }
 
     public void resetAccessToken() {
         editor.putString(API_ID, null);
@@ -59,8 +68,19 @@ public class InstagramSession {
         return sharedPref.getString(API_NAME, null);
     }
 
-
     public String getAccessToken() {
         return sharedPref.getString(API_ACCESS_TOKEN, null);
+    }
+
+    public String getMedia() {
+        return sharedPref.getString(API_MEDIA, null);
+    }
+
+    public String getFollow() {
+        return sharedPref.getString(API_FOLLOW, null);
+    }
+
+    public String getFollower() {
+        return sharedPref.getString(API_FOLLOWER, null);
     }
 }

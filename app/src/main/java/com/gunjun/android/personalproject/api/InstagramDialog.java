@@ -42,7 +42,7 @@ public class InstagramDialog extends Dialog {
                            OAuthDialogListener listener) {
         super(context);
         this.url = url;
-        listener = listener;
+        this.listener = listener;
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {

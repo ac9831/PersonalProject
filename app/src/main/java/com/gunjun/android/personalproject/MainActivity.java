@@ -12,20 +12,23 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth
+        .GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -38,6 +41,7 @@ import com.google.api.services.calendar.model.Events;
 import com.gunjun.android.personalproject.Rss.RssReader;
 import com.gunjun.android.personalproject.api.InstagramApp;
 import com.gunjun.android.personalproject.api.InstagramMediaFile;
+import com.gunjun.android.personalproject.api.InstagramSession;
 import com.gunjun.android.personalproject.behavior.BottomNavigationViewHelper;
 import com.gunjun.android.personalproject.models.Profile;
 import com.gunjun.android.personalproject.models.RssFeed;
@@ -77,10 +81,14 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         @Override
         public boolean handleMessage(Message msg) {
             if (msg.what == InstagramApp.WHAT_FINALIZE) {
-
+                todayMedia.setText(instagramSession.getMedia());
+                follow.setText(instagramSession.getFollow());
+                follower.setText(instagramSession.getFollower());
+                instagramInfo.setVisibility(View.VISIBLE);
+                instagramWarm.setVisibility(View.INVISIBLE);
             } else if (msg.what == InstagramApp.WHAT_ERROR) {
-                Toast.makeText(MainActivity.this, "Check your network.",
-                        Toast.LENGTH_SHORT).show();
+                instagramInfo.setVisibility(View.INVISIBLE);
+                instagramWarm.setVisibility(View.VISIBLE);
             }
             return false;
         }
@@ -91,7 +99,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private DateFormat format;
     private AsyncTask<Void, Void, Void> mTask;
     private InstagramMediaFile instagramMediaFile;
+    private InstagramSession instagramSession;
+    private Context context;
 
+    private MenuItem prevBottomNavigation;
 
     @BindView(R.id.bottom_navigation)
     protected BottomNavigationView bottomNavigationView;
@@ -120,16 +131,32 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @BindView(R.id.main_toolbar)
     protected Toolbar toolbar;
 
+    @BindView(R.id.today_media)
+    protected TextView todayMedia;
+
+    @BindView(R.id.follow)
+    protected TextView follow;
+
+    @BindView(R.id.follower)
+    protected TextView follower;
+
+    @BindView(R.id.instagram_info)
+    protected LinearLayout instagramInfo;
+
+    @BindView(R.id.instagram_warm)
+    protected LinearLayout instagramWarm;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
         ButterKnife.bind(this);
         realm = Realm.getDefaultInstance();
         instagramMediaFile = new InstagramMediaFile();
-        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
-        bottomNavigationView.findViewById(floatingActionButton.getId());
+        instagramSession = new InstagramSession(this);
+        bottomSetting();
         List<Profile> query = realm.where(Profile.class).findAll();
         if(query.size() < 1) {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
@@ -144,7 +171,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Personal");
 
-        stepSetting();
+        displaySteps();
+        instagramMediaFile.getAllMediaImages(handler, instagramSession);
 
         try {
             rssCall();
@@ -163,7 +191,36 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         startService(service);
     }
 
-    private void stepSetting() {
+    public void bottomSetting() {
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+        bottomNavigationView.findViewById(floatingActionButton.getId());
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_feed:
+                        return true;
+                    case R.id.action_rss:
+                        return true;
+                    case R.id.action_video:
+                        startActivity(new Intent(context, YoutubeActivity.class));
+                    case R.id.action_sns:
+                        return true;
+                }
+                return false;
+            }
+
+
+        });
+    }
+
+
+
+
+
+
+    private void displaySteps() {
         Date date = new Date();
         format = DateFormat.getDateInstance(DateFormat.MEDIUM);
         Step step = realm.where(Step.class).equalTo("today",format.format(date)).findFirst();
@@ -445,4 +502,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         return true;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        displaySteps();
+        instagramMediaFile.getAllMediaImages(handler, instagramSession);
+    }
 }

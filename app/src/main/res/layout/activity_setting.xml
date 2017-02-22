@@ -149,6 +149,49 @@
             android:scaleType="fitCenter"
             android:button="@null" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space"
+        android:background="@color/settingBackColor">
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/youtube_icon"
+            android:layout_weight="2"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="15">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/setting_title"
+                android:id="@+id/youtube_channel_title"
+                android:text="@string/youtube_channel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/youtube_channel_num"
+                android:textSize="@dimen/setting_connect"
+                android:text="0"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/youtube_button"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/check_box"
+            android:layout_height="@dimen/check_box"
+            android:onClick="youtubeSetting"
+            android:background="@drawable/right_arrow"/>
+    </LinearLayout>
 
 
 </LinearLayout>

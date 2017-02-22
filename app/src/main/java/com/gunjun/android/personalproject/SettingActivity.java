@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -38,12 +39,14 @@ import com.gunjun.android.personalproject.api.FacebookSession;
 import com.gunjun.android.personalproject.api.GoogleSession;
 import com.gunjun.android.personalproject.api.InstagramApp;
 import com.gunjun.android.personalproject.api.InstagramSession;
+import com.gunjun.android.personalproject.models.Youtube;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 public class SettingActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -57,6 +60,7 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
     private FacebookSession facebookSession;
     private GoogleSession googleSession;
     private InstagramApp mApp;
+    private Realm realm;
     private HashMap<String, String> userInfoHashmap = new HashMap<String, String>();
     private CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -81,11 +85,7 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
                     }
                     break;
                 case R.id.instagram_check:
-                    if (isChecked) {
-                        connectOrDisconnectUser();
-                    } else {
-                        connectOrDisconnectUser();
-                    }
+                    handleInstgramLoginAndLogout();
                     break;
                 default:
                     break;
@@ -100,9 +100,8 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
                 userInfoHashmap = mApp.getUserInfo();
                 instagramCheck.setChecked(true);
                 instagramText.setText(R.string.connect);
-            } else if (msg.what == InstagramApp.WHAT_FINALIZE) {
-                Toast.makeText(SettingActivity.this, "Check your network.",
-                        Toast.LENGTH_SHORT).show();
+            } else {
+                instagramCheck.setChecked(false);
             }
             return false;
         }
@@ -130,6 +129,8 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
     @BindView(R.id.instagram_status)
     protected TextView instagramText;
 
+    @BindView(R.id.youtube_channel_num)
+    protected TextView channelNum;
 
 
     @Override
@@ -151,13 +152,19 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         initUI();
-        instagramSetting();
         GoogleLogin();
         FacebookLogin();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        channelNum.setText(realm.where(Youtube.class).findAll().size()+"");
+    }
+
     private void initUI() {
         ButterKnife.bind(this);
+        realm = Realm.getDefaultInstance();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -184,6 +191,8 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
         googleCheck.setOnCheckedChangeListener(onCheckedChangeListener );
         instagramCheck.setOnCheckedChangeListener(onCheckedChangeListener);
         facebookCheck.setOnCheckedChangeListener(onCheckedChangeListener);
+
+        channelNum.setText(realm.where(Youtube.class).findAll().size()+"");
     }
 
 
@@ -200,7 +209,7 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
     }
 
 
-    private void instagramSetting() {
+    private void initInstagramLogin() {
         mApp = new InstagramApp(this, BuildConfig.CLIENT_ID,
                 BuildConfig.CLIENT_SECRET, BuildConfig.CALLBACK_URL);
         mApp.setListener(new InstagramApp.OAuthAuthenticationListener() {
@@ -222,8 +231,8 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
     }
 
     // instagram
-    private void connectOrDisconnectUser() {
-        if (mApp.hasAccessToken()) {
+    private void handleInstgramLoginAndLogout() {
+        if (instagramSession.getAccessToken() != null) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(
                     SettingActivity.this);
             builder.setMessage("Disconnect from Instagram?")
@@ -235,6 +244,7 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
                                     instagramSession.resetAccessToken();
                                     instagramCheck.setChecked(false);
                                     instagramText.setText(R.string.not_connect);
+                                    initInstagramLogin();
                                 }
                             })
                     .setNegativeButton("No",
@@ -242,12 +252,14 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
                                 public void onClick(DialogInterface dialog,
                                                     int id) {
                                     dialog.cancel();
+                                    instagramCheck.setChecked(true);
                                 }
                             });
             final AlertDialog alert = builder.create();
             alert.show();
 
         } else {
+            initInstagramLogin();
             mApp.authorize();
         }
     }
@@ -321,6 +333,10 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
         LoginManager.getInstance().logInWithReadPermissions(SettingActivity.this, Arrays.asList("public_profile", "email"));
     }
 
+    //youtube
+    public void youtubeSetting(View v) {
+        startActivity(new Intent(this, YoutubeChannelActivity.class));
+    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

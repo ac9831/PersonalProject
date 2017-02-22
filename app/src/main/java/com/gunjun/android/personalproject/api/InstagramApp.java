@@ -93,11 +93,11 @@ public class InstagramApp {
                     sb.append(clientId);
                     sb.append("&client_secret=");
                     sb.append(clientSecret);
-                    writer.write("client_id="+clientId+
-                            "&client_secret="+clientSecret+
-                            "&grant_type=authorization_code" +
-                            "&redirect_uri="+callbackUrl+
-                            "&code=" + code);
+                    sb.append("&grant_type=authorization_code&redirect_uri=");
+                    sb.append(callbackUrl);
+                    sb.append("&code=");
+                    sb.append(code);
+                    writer.write(sb.toString());
                     writer.flush();
                     String response = streamToString(urlConnection.getInputStream());
                     Log.i(TAG, "response " + response);
@@ -119,7 +119,7 @@ public class InstagramApp {
         }.start();
     }
 
-    public void     fetchUserName(final Handler handler) {
+    public void fetchUserName(final Handler handler) {
         progress.setMessage("Finalizing ...");
         new Thread() {
             @Override
