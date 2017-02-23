@@ -1,15 +1,21 @@
-package com.gunjun.android.personalproject;
+package com.gunjun.android.personalproject.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.gunjun.android.personalproject.R;
 import com.gunjun.android.personalproject.adapter.YoutubeAdapter;
 import com.gunjun.android.personalproject.api.YoutubeApi;
 import com.gunjun.android.personalproject.interfaces.YouTubeVideosReceiver;
+import com.gunjun.android.personalproject.listener.EndlessRecyclerViewScrollListener;
 import com.gunjun.android.personalproject.models.YouTubeVideo;
 
 import java.util.ArrayList;
@@ -19,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class YoutubeActivity extends AppCompatActivity implements YouTubeVideosReceiver {
+public class YoutubeFragment extends Fragment implements YouTubeVideosReceiver {
 
     private YoutubeApi youtubeApi;
     private Realm realm;
@@ -29,38 +35,71 @@ public class YoutubeActivity extends AppCompatActivity implements YouTubeVideosR
     private RecyclerView.LayoutManager layoutManager;
     private int onScrollIndex = 0;
     private YoutubeAdapter youtubeAdapter;
-
-
-    @BindView(R.id.youtube_toolbar)
-    protected Toolbar toolbar;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @BindView(R.id.youtube_list)
     protected RecyclerView recyclerView;
 
+
+    public YoutubeFragment() {
+        // Required empty public constructor
+    }
+
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_youtube);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Personal");
+
         realm = Realm.getDefaultInstance();
-        youtubeAdapter = new YoutubeAdapter(searchResultsList, this);
-        youtubeApi = new YoutubeApi(this, realm);
+        layoutManager = new LinearLayoutManager(this.getActivity());
+        youtubeAdapter = new YoutubeAdapter(searchResultsList, this.getActivity());
+        youtubeApi = new YoutubeApi(this.getActivity(), realm);
         handler = new Handler();
         searchResultsList = new ArrayList<>();
         scrollResultsList = new ArrayList<>();
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(youtubeAdapter);
+        onScrollIndex = 0;
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                addMoreData();
+            }
+        };
+
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        youtubeApi = new YoutubeApi(this, realm);
+        youtubeApi = new YoutubeApi(this.getActivity(), realm);
         youtubeApi.setYouTubeVideosReceiver(this);
         youtubeApi.searchVideos();
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_youtube, container, false);
+        ButterKnife.bind(this, view);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(youtubeAdapter);
+        recyclerView.addOnScrollListener(scrollListener);
+
+        return view;
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
 
     @Override
     public void onVideosReceived(ArrayList<YouTubeVideo> youTubeVideos) {
@@ -74,6 +113,8 @@ public class YoutubeActivity extends AppCompatActivity implements YouTubeVideosR
 
         List<YouTubeVideo> subList;
         if (scrollResultsList.size() < (onScrollIndex + 10)) {
+            Log.d("dd",scrollResultsList.size()+"");
+            Log.d("cc",onScrollIndex + "");
             subList = scrollResultsList.subList(onScrollIndex, scrollResultsList.size());
             onScrollIndex += (scrollResultsList.size() % 10);
         } else {
@@ -86,7 +127,7 @@ public class YoutubeActivity extends AppCompatActivity implements YouTubeVideosR
             handler.post(new Runnable() {
                 public void run() {
                     if (youtubeAdapter != null) {
-                        Log.d("하이","하이루");
+                        youtubeAdapter.setYouTubeVideoList(searchResultsList);
                         youtubeAdapter.notifyDataSetChanged();
                     }
                 }

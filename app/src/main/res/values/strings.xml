@@ -36,4 +36,7 @@
     <string name="connect">연결 됨</string>
     <string name="not_connect">연결 되지 않음</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

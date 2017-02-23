@@ -27,6 +27,10 @@ public class YoutubeAdapter extends RecyclerView.Adapter<YoutubeViewHolder>  {
         this.context = context;
     }
 
+    public void setYouTubeVideoList(List<YouTubeVideo> youTubeVideoList) {
+        this.youTubeVideoList = youTubeVideoList;
+    }
+
     @Override
     public YoutubeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.youtube_list, parent, false);
@@ -36,7 +40,7 @@ public class YoutubeAdapter extends RecyclerView.Adapter<YoutubeViewHolder>  {
 
     @Override
     public void onBindViewHolder(YoutubeViewHolder holder, int position) {
-        final YouTubeVideo searchResult = youTubeVideoList.get(position);
+        YouTubeVideo searchResult = youTubeVideoList.get(position);
         holder.videosNumber.setText(searchResult.getViewCount());
         Glide.with(context).load(searchResult.getThumbnailURL()).into(holder.videoThumbnail);
         holder.playlistTitle.setText(searchResult.getTitle());
@@ -44,6 +48,10 @@ public class YoutubeAdapter extends RecyclerView.Adapter<YoutubeViewHolder>  {
 
     @Override
     public int getItemCount() {
-        return youTubeVideoList.size();
+        if(youTubeVideoList == null) {
+            return 0;
+        } else {
+            return youTubeVideoList.size();
+        }
     }
 }

@@ -65,7 +65,8 @@
             android:label="@string/title_activity_settings" />
         <activity android:name=".SettingActivity" />
         <activity android:name=".YoutubeChannelActivity" />
-        <activity android:name=".YoutubeActivity"></activity>
+        <activity android:name=".YoutubeActivity" />
+        <activity android:name=".InstagramActivity"></activity>
     </application>
 
 </manifest>

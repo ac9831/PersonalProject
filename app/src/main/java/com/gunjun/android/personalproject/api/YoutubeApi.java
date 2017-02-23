@@ -70,7 +70,6 @@ public class YoutubeApi {
                         SearchListResponse searchListResponse = searchList.execute();
                         List<SearchResult> searchResults = searchListResponse.getItems();
 
-                        //save all ids from searchList list in order to find video list
                         StringBuilder contentDetails = new StringBuilder();
 
                         int ii = 0;
@@ -81,17 +80,14 @@ public class YoutubeApi {
                             ii++;
                         }
 
-                        //make items for displaying in listView
                         ArrayList<YouTubeVideo> items = new ArrayList<>();
                         for (int j = 0; j < searchResults.size(); j++) {
                             YouTubeVideo item = new YouTubeVideo();
-                            //searchList list info
                             item.setTitle(searchResults.get(j).getSnippet().getTitle());
                             item.setThumbnailURL(searchResults.get(j).getSnippet().getThumbnails().getDefault().getUrl());
                             item.setId(searchResults.get(j).getId().getVideoId());
                             item.setDuration("NA");
 
-                            //add to the list
                             items.add(item);
                         }
                         resultList.addAll(items);
