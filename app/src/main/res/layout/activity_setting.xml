@@ -189,7 +189,7 @@
             android:layout_gravity="center"
             android:layout_width="@dimen/check_box"
             android:layout_height="@dimen/check_box"
-            android:onClick="youtubeSetting"
+            android:onClick="setupYoutube"
             android:background="@drawable/right_arrow"/>
     </LinearLayout>
 

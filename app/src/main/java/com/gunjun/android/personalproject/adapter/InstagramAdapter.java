@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.gunjun.android.personalproject.R;
 import com.gunjun.android.personalproject.adapter.viewholder.InstagramViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,9 +23,15 @@ public class InstagramAdapter extends RecyclerView.Adapter<InstagramViewHolder> 
     private List<String> instagramUrl;
     private int size;
 
+
     public InstagramAdapter(List<String> instagramUrl, Activity context) {
         this.instagramUrl = instagramUrl;
         this.context = context;
+        this.size = instagramUrl.size();
+    }
+
+    public void setInstagramUrl(ArrayList<String> instagramUrl) {
+        this.instagramUrl = instagramUrl;
         this.size = instagramUrl.size();
     }
 
@@ -39,13 +46,21 @@ public class InstagramAdapter extends RecyclerView.Adapter<InstagramViewHolder> 
     public void onBindViewHolder(InstagramViewHolder holder, int position) {
         int index = 0;
         if(position > 0) {
-            index = 3*position;
+            index = 3 * position;
         } else {
             index = 0;
         }
-        Glide.with(context).load(instagramUrl.get(index)).into(holder.imageOne);
-        Glide.with(context).load(instagramUrl.get(index+1)).into(holder.imageTwo);
-        Glide.with(context).load(instagramUrl.get(index+2)).into(holder.imageThree);
+        if(index < instagramUrl.size()) {
+            Glide.with(context).load(instagramUrl.get(index)).into(holder.imageOne);
+        }
+
+        if(index + 1 < instagramUrl.size()) {
+            Glide.with(context).load(instagramUrl.get(index+1)).into(holder.imageTwo);
+        }
+
+        if(index + 2 < instagramUrl.size()) {
+            Glide.with(context).load(instagramUrl.get(index+2)).into(holder.imageThree);
+        }
     }
 
     @Override

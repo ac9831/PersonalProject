@@ -26,7 +26,6 @@ public class YoutubeChannelActivity extends AppCompatActivity {
     private ChannelAdapter channelAdapter;
     private Realm realm;
 
-
     @BindView(R.id.youtube_channel_toolbar)
     protected Toolbar toolbar;
 
@@ -38,7 +37,6 @@ public class YoutubeChannelActivity extends AppCompatActivity {
 
     @BindView(R.id.channel_input)
     protected Button channelInput;
-
 
     @Override
     protected void onResume() {
@@ -84,7 +82,6 @@ public class YoutubeChannelActivity extends AppCompatActivity {
         };
 
         editText.addTextChangedListener(textWatcher);
-
     }
 
     @Override

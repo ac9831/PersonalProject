@@ -6,10 +6,10 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.gunjun.android.personalproject.R;
 import com.gunjun.android.personalproject.adapter.YoutubeAdapter;
@@ -40,12 +40,12 @@ public class YoutubeFragment extends Fragment implements YouTubeVideosReceiver {
     @BindView(R.id.youtube_list)
     protected RecyclerView recyclerView;
 
+    @BindView(R.id.youtube_progress_bar)
+    protected ProgressBar progressBar;
 
     public YoutubeFragment() {
         // Required empty public constructor
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,10 +84,9 @@ public class YoutubeFragment extends Fragment implements YouTubeVideosReceiver {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(youtubeAdapter);
         recyclerView.addOnScrollListener(scrollListener);
-
+        progressBar.setVisibility(View.VISIBLE);
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -113,8 +112,6 @@ public class YoutubeFragment extends Fragment implements YouTubeVideosReceiver {
 
         List<YouTubeVideo> subList;
         if (scrollResultsList.size() < (onScrollIndex + 10)) {
-            Log.d("dd",scrollResultsList.size()+"");
-            Log.d("cc",onScrollIndex + "");
             subList = scrollResultsList.subList(onScrollIndex, scrollResultsList.size());
             onScrollIndex += (scrollResultsList.size() % 10);
         } else {
@@ -129,6 +126,7 @@ public class YoutubeFragment extends Fragment implements YouTubeVideosReceiver {
                     if (youtubeAdapter != null) {
                         youtubeAdapter.setYouTubeVideoList(searchResultsList);
                         youtubeAdapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
             });

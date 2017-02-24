@@ -334,7 +334,7 @@ public class SettingActivity extends AppCompatActivity implements GoogleApiClien
     }
 
     //youtube
-    public void youtubeSetting(View v) {
+    public void setupYoutube(View v) {
         startActivity(new Intent(this, YoutubeChannelActivity.class));
     }
 

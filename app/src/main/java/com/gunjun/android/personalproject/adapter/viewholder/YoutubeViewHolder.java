@@ -10,12 +10,7 @@ import com.gunjun.android.personalproject.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by gunjunLee on 2017-02-21.
- */
-
 public class YoutubeViewHolder extends RecyclerView.ViewHolder {
-
 
     @BindView(R.id.video_thumbnail)
     public ImageView videoThumbnail;

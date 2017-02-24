@@ -10,7 +10,6 @@
         android:layout_height="match_parent"
         android:padding="@dimen/activity_horizontal_margin"
         android:paddingTop="?attr/actionBarSize"
-        tools:context=".InstagramActivity"
         tools:listitem="@layout/instagram_list" />
 
 </LinearLayout>

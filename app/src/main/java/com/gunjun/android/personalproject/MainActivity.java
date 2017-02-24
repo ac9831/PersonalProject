@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.gunjun.android.personalproject.behavior.BottomNavigationViewHelper;
 import com.gunjun.android.personalproject.fragment.DashBoardFragment;
+import com.gunjun.android.personalproject.fragment.InstagramFragment;
+import com.gunjun.android.personalproject.fragment.RssFragment;
 import com.gunjun.android.personalproject.fragment.YoutubeFragment;
 import com.gunjun.android.personalproject.models.Profile;
 import com.gunjun.android.personalproject.service.ShakeService;
@@ -51,6 +53,19 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_toolbar)
     protected Toolbar toolbar;
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        List<Profile> query = realm.where(Profile.class).findAll();
+        if(query.size() > 0) {
+            File imgFile = new  File(query.get(0).getImgPath());
+            if(imgFile.exists()){
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                floatingActionButton.setImageBitmap(myBitmap);
+            }
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -94,14 +109,17 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_feed:
-                        return true;
+                        fragment = new DashBoardFragment();
+                        break;
                     case R.id.action_rss:
-                        return true;
+                        fragment = new RssFragment();
+                        break;
                     case R.id.action_video:
                         fragment = new YoutubeFragment();
                         break;
                     case R.id.action_sns:
-                        return true;
+                        fragment = new InstagramFragment();
+                        break;
                 }
                 transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_fragment, fragment).commit();

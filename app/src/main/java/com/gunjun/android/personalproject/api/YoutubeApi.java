@@ -58,7 +58,7 @@ public class YoutubeApi {
                     realm = Realm.getDefaultInstance();
                     List<Youtube> youtubeList = realm.where(Youtube.class).findAll();
                     ArrayList<YouTubeVideo> resultList = new ArrayList<YouTubeVideo>();
-                    for(int i=0;i<youtubeList.size();i++) {
+                    for(int i=0; i<youtubeList.size(); i++) {
                         YouTube.Search.List searchList;
                         searchList = youtube.search().list("id,snippet");
                         searchList.setKey(BuildConfig.GOOGLE_API_KEY);

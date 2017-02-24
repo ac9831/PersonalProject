@@ -1,5 +1,7 @@
 package com.gunjun.android.personalproject.Rss;
 
+import android.util.Log;
+
 import com.gunjun.android.personalproject.models.RssFeed;
 
 import org.xml.sax.InputSource;

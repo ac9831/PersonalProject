@@ -10,6 +10,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,14 +21,21 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.ViewTarget;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth
+        .GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -41,11 +50,18 @@ import com.gunjun.android.personalproject.Rss.RssReader;
 import com.gunjun.android.personalproject.api.InstagramApp;
 import com.gunjun.android.personalproject.api.InstagramMediaFile;
 import com.gunjun.android.personalproject.api.InstagramSession;
+import com.gunjun.android.personalproject.api.WeatherParser;
+import com.gunjun.android.personalproject.api.WeatherHttpClient;
 import com.gunjun.android.personalproject.models.RssFeed;
 import com.gunjun.android.personalproject.models.RssItem;
 import com.gunjun.android.personalproject.models.Step;
+import com.gunjun.android.personalproject.models.Weather;
 import com.gunjun.android.personalproject.service.ShakeService;
 
+import org.json.JSONException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -98,11 +114,11 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
     private InstagramSession instagramSession;
     private Context context;
 
-    @BindView(R.id.news_detail_one)
-    protected TextView newsDetailOne;
+    @BindView(R.id.news_image_one)
+    protected ImageView newsImageOne;
 
-    @BindView(R.id.news_detail_two)
-    protected TextView newsDetailTwo;
+    @BindView(R.id.news_image_two)
+    protected ImageView newsImageTwo;
 
     @BindView(R.id.news_title_one)
     protected TextView newsTitleOne;
@@ -115,7 +131,6 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
 
     @BindView(R.id.calendar_list)
     protected TextView calendarList;
-
 
     @BindView(R.id.today_media)
     protected TextView todayMedia;
@@ -132,13 +147,18 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
     @BindView(R.id.instagram_warm)
     protected LinearLayout instagramWarm;
 
+    @BindView(R.id.icon_weather)
+    protected ImageView iconWeather;
 
+    @BindView(R.id.text_weather)
+    protected TextView textWeather;
 
+    @BindView(R.id.dashboard_progress_bar)
+    protected ProgressBar progressBar;
 
     public DashBoardFragment() {
         // Required empty public constructor
     }
-
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -151,6 +171,10 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
 
         Intent service = new Intent(this.getActivity(), ShakeService.class);
         this.getActivity().startService(service);
+        context = this.getActivity();
+        JSONWeatherTask task = new JSONWeatherTask();
+        task.execute(new String[]{"Chamsil,KR"});
+
     }
 
     @Override
@@ -160,7 +184,7 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
         ButterKnife.bind(this, view);
 
         displaySteps();
-        instagramMediaFile.getAllMediaImages(handler, instagramSession);
+        instagramMediaFile.getUserInfo(handler, instagramSession);
 
         try {
             rssCall();
@@ -175,6 +199,7 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
                 .setBackOff(new ExponentialBackOff());
 
         getResultsFromApi();
+        progressBar.setVisibility(View.VISIBLE);
         return view;
     }
 
@@ -230,17 +255,50 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
                     e.printStackTrace();
                 }
 
+                try {
+                    for(int i=0;i<2;i++) {
+                        Document doc = Jsoup.connect(rssItems.get(i).getLink()).get();
+                        Elements items = doc.select("meta");
+                        for(int j=0;j<items.size();j++){
+                            if(items.get(j).attr("property").equals("og:image")) {
+                                rssItems.get(i).setImageUrl(items.get(j).attr("content") );
+                            }
+                        }
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                Glide.with(context).load(rssItems.get(0).getImageUrl())
+                        .into(new ViewTarget<ImageView, GlideDrawable>(newsImageOne) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
 
-                newsDetailOne.setText(splitDetail(rssItems.get(0).getDescription()));
-                newsDetailTwo.setText(splitDetail(rssItems.get(1).getDescription()));
+                        // Set your resource on myView and/or start your animation here.
+                        newsImageOne.setBackground(resource);
+                    }
+                });
+                Glide.with(context).load(rssItems.get(1).getImageUrl())
+                        .into(new ViewTarget<ImageView, GlideDrawable>(newsImageTwo) {
+                            @Override
+                            public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
+
+                                // Set your resource on myView and/or start your animation here.
+                                newsImageTwo.setBackground(resource);
+                            }
+                        });
                 newsTitleOne.setText(rssItems.get(0).getTitle());
+                newsTitleOne.bringToFront();
                 newsTitleTwo.setText(rssItems.get(1).getTitle());
+                newsTitleTwo.bringToFront();
 
             }
         };
@@ -248,11 +306,11 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
         mTask.execute();
     }
 
-    public String splitDetail(String s) {
+    /*public String splitDetail(String s) {
         s = s.replaceAll("&nbsp", "");
         s = s.replaceAll(System.getProperty("line.separator"), "");
         return s.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "");
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -397,6 +455,7 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
             } else {
                 calendarList.setText(TextUtils.join("\n", output));
             }
+            progressBar.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -419,11 +478,7 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
             }
         }
 
-        /**
-         * Fetch a list of the next 10 events from the primary calendar.
-         * @return List of Strings describing returned events.
-         * @throws IOException
-         */
+
         private List<String> getDataFromApi() throws IOException {
             // List the next 10 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
@@ -453,6 +508,44 @@ public class DashBoardFragment extends Fragment implements EasyPermissions.Permi
     public void onStart() {
         super.onStart();
         displaySteps();
-        instagramMediaFile.getAllMediaImages(handler, instagramSession);
+        instagramMediaFile.getUserInfo(handler, instagramSession);
     }
+
+
+    private class JSONWeatherTask extends AsyncTask<String, Void, Weather> {
+
+        @Override
+        protected Weather doInBackground(String... params) {
+            Weather weather = new Weather();
+            String data = ( (new WeatherHttpClient()).getWeatherData(params[0]));
+
+            try {
+                weather = WeatherParser.getWeather(data);
+
+                // Let's retrieve the icon
+                weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return weather;
+
+        }
+
+
+
+
+        @Override
+        protected void onPostExecute(Weather weather) {
+            super.onPostExecute(weather);
+
+            if (weather.iconData != null && weather.iconData.length > 0) {
+                Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
+                iconWeather.setImageBitmap(img);
+            }
+            textWeather.setText("" + Math.round((weather.temperature.getTemp() - 273.15)) + "℃");
+        }
+
+    }
+
 }

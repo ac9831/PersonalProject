@@ -63,11 +63,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         facebookSession = new FacebookSession(this);
         googleSession = new GoogleSession(this);
 
-        if(facebookSession.getAccessToken() != null || googleSession.getAccessToken() != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        }
-
         FacebookLogin();
         GoogleLogin();
     }
@@ -117,6 +112,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -143,6 +139,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         token = acct.getId();
+        Log.d("aa", token);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override

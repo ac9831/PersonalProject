@@ -20,6 +20,7 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
     private Date pubDate;
     private String description;
     private String content;
+    private String imageUrl;
 
     public RssItem() {
 
@@ -120,6 +121,15 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 
     @Override
     public int compareTo(RssItem another) {

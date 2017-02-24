@@ -18,14 +18,14 @@
     <string name="finish">완료</string>
 
     <!-- Dashboard -->
-    <string name="feed">개인 피드</string>
+    <string name="feed">대쉬보드</string>
     <string name="rss">rss</string>
     <string name="video">영상</string>
     <string name="sns">SNS</string>
     <string name="setting">Setting</string>
 
     <!-- facebook -->
-    <string name="facebook_app_id">218522611945703</string>
+    <string name="facebook_app_id">171013823401427</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Setting -->
