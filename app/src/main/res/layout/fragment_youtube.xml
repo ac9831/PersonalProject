@@ -1,0 +1,23 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.gunjun.android.personalproject.fragment.YoutubeFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/youtube_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:paddingTop="?attr/actionBarSize"
+        tools:listitem="@layout/youtube_list" />
+
+    <ProgressBar
+        android:id="@+id/youtube_progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>

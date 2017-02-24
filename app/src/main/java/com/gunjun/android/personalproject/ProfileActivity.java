@@ -40,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
     private Uri imageCaptureUri;
     private Realm realm;
+    private String storePath;
 
     @BindView(R.id.profile_age)
     protected EditText profileAge;
@@ -59,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity  {
     @BindView(R.id.profile_image)
     protected CircleImageView circleImageView;
 
-    @BindView(R.id.my_toolbar)
+    @BindView(R.id.profile_toolbar)
     protected Toolbar toolbar;
 
     @Override
@@ -139,6 +140,10 @@ public class ProfileActivity extends AppCompatActivity  {
             profile.setGoalStep(0);
         }
 
+        if (storePath!= null) {
+            profile.setImgPath(storePath);
+        }
+
         realm.commitTransaction();
         finish();
     }
@@ -175,6 +180,7 @@ public class ProfileActivity extends AppCompatActivity  {
                 }
 
                 File f = new File(imageCaptureUri.getPath());
+
                 if (f.exists()) {
                     f.delete();
                 }
@@ -269,7 +275,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                     FileProvider.getUriForFile(this, "com.gunjun.android.fileprovider",copyFile)));
-
+            storePath = copyFile.getAbsolutePath();
             out.flush();
             out.close();
         } catch (Exception e) {

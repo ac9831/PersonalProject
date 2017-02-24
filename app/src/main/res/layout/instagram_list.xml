@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:layout_height="120dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:id="@+id/instagram_image_one"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:id="@+id/instagram_image_two"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:id="@+id/instagram_image_three"/>
+
+
+</LinearLayout>

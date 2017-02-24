@@ -27,24 +27,25 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.gunjun.android.personalproject.models.User;
+import com.gunjun.android.personalproject.api.FacebookSession;
+import com.gunjun.android.personalproject.api.GoogleSession;
 
 import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int RC_SIGN_IN = 9001;
 
     private CallbackManager callbackManager;
-    private Realm realm;
     private GoogleApiClient googleApiClient;
     private FirebaseAuth auth;
     private String token;
+    private FacebookSession facebookSession;
+    private GoogleSession googleSession;
+
 
     @BindView(R.id.facebook_login)
     protected Button facebookButton;
@@ -58,17 +59,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         callbackManager = CallbackManager.Factory.create();
-        realm = Realm.getDefaultInstance();
 
-        List<User> query = realm.where(User.class).findAll();
-        if(query.size() > 0) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        }
+        facebookSession = new FacebookSession(this);
+        googleSession = new GoogleSession(this);
 
         FacebookLogin();
         GoogleLogin();
-
     }
 
     private void GoogleLogin() {
@@ -94,13 +90,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                realm.beginTransaction();
-                // 한 사람의 유저만 저장 하기 때문에 id를 1로 고정
-                // 로그아웃 때 User를 삭제한다.
-                User user = realm.createObject(User.class, 1);
-                user.setAccessToken(loginResult.getAccessToken().toString());
-                user.setType("facebook");
-                realm.commitTransaction();
+                facebookSession.storeAccessToken(loginResult.getAccessToken().toString());
 
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
@@ -122,10 +112,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             }
@@ -149,6 +139,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         token = acct.getId();
+        Log.d("aa", token);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -161,13 +152,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            realm.beginTransaction();
-                            // 한 사람의 유저만 저장 하기 때문에 id를 1로 고정
-                            // 로그아웃 때 User를 삭제한다.
-                            User user = realm.createObject(User.class, 1);
-                            user.setAccessToken(token);
-                            user.setType("google");
-                            realm.commitTransaction();
+                            googleSession.storeAccessToken(token);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }
@@ -178,7 +163,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
     }
 
 }

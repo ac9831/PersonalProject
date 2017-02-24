@@ -17,6 +17,26 @@
     <string name="picture">사진을 선택하세요</string>
     <string name="finish">완료</string>
 
+    <!-- Dashboard -->
+    <string name="feed">대쉬보드</string>
+    <string name="rss">rss</string>
+    <string name="video">영상</string>
+    <string name="sns">SNS</string>
+    <string name="setting">Setting</string>
+
     <!-- facebook -->
-    <string name="facebook_app_id">218522611945703</string>
+    <string name="facebook_app_id">171013823401427</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Setting -->
+    <string name="facebook">페이스 북</string>
+    <string name="google">구글</string>
+    <string name="instagram">인스타그램</string>
+    <string name="youtube_channel">Youtube 채널 등록</string>
+    <string name="connect">연결 됨</string>
+    <string name="not_connect">연결 되지 않음</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
