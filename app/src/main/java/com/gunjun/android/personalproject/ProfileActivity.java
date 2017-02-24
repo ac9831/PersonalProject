@@ -77,7 +77,6 @@ public class ProfileActivity extends AppCompatActivity  {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.profile, menu);
@@ -106,7 +105,6 @@ public class ProfileActivity extends AppCompatActivity  {
     }
 
     public void onClickFinish() {
-
 
         List<Profile> query = realm.where(Profile.class).findAll();
         Profile profile;

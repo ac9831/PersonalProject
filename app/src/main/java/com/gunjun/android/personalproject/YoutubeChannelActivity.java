@@ -25,7 +25,7 @@ public class YoutubeChannelActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private ChannelAdapter channelAdapter;
     private Realm realm;
-
+    
     @BindView(R.id.youtube_channel_toolbar)
     protected Toolbar toolbar;
 
