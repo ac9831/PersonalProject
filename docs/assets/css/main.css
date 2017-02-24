@@ -1880,6 +1880,13 @@
 		border-color: rgba(255, 255, 255, 0.35);
 	}
 
+.video { 
+    margin : 0 auto;
+}
+
+.content video {
+    object-fit: contain;
+}
 /* Button */
 
 	input[type="submit"],
@@ -3030,13 +3037,13 @@
 			display: inline-block;
 			margin-left: 4em;
 			padding: 0.65em;
-			border-radius: 100%;
+			border-radius: 20%;
 			border: solid 1px;
 		}
 
 			.spotlight .image img {
 				display: block;
-				border-radius: 100%;
+				border-radius: 20%;
 				width: 16em;
 			}
 
